@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  app:
+    image: your-image
+    secrets:
+      - db_password
+    environment:
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt

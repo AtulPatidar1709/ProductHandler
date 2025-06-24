@@ -24,6 +24,15 @@ public class ProductService {
         return repository.findAll();
     }
 
+    public List<Product> advancedSearch(String keyword, Double minPrice, Double maxPrice, Integer minQuantity) {
+        return repository.advancedSearch(
+                keyword != null ? keyword : "",
+                minPrice != null ? minPrice : 0.0,
+                maxPrice != null ? maxPrice : Double.MAX_VALUE,
+                minQuantity != null ? minQuantity : 0
+        );
+    }
+
     public Product getProductById(int id) {
         return repository.findById(id).orElse(null);
     }
