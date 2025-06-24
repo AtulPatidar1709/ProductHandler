@@ -11,3 +11,4 @@ public class SpringBootCrudExample2Application {
 	}
 
 }
+

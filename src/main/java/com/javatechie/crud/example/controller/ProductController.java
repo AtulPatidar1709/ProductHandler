@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 @RestController
-public class ProductController {
+public class ProductController{
 
     @Autowired
     private ProductService service;
@@ -24,7 +24,7 @@ public class ProductController {
         return "Product service is running healthily!";
     }
 
-        @GetMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<?> searchProducts(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Double minPrice,
