@@ -1,0 +1,48 @@
+# Java
+/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+mvnw.cmd
+mvnw
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+*.log
+*.swp
+*.swo
+*.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment & Secrets
+.env
+secrets/
+db_password.txt
+*.secret
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+
+# Misc
+*.tmp
+*.bak
+*.old
+
+# Node (if any frontend)
+node_modules/
