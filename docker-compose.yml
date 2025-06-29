@@ -1,11 +1,49 @@
-version: '3.7'
 services:
-  app:
-    image: your-image
-    secrets:
-      - db_password
+  mysql_db:
+    image: mysql:8
+    container_name: mysql
+    networks:
+      - spring-product-networks
     environment:
-      - DB_PASSWORD_FILE=/run/secrets/db_password
-secrets:
-  db_password:
-    file: ./secrets/db_password.txt
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: javatechie
+      MYSQL_USER: javatechie
+      MYSQL_PASSWORD: password
+    restart: always
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 60s
+      timeout: 5s
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: productApp
+    networks:
+      - spring-product-networks
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/javatechie
+      SPRING_DATASOURCE_USERNAME: javatechie
+      SPRING_DATASOURCE_PASSWORD: password
+      SERVER_PORT: 8080
+    depends_on:
+      - mysql_db
+    restart: always
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f  http://localhost:8080/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 60s
+      timeout: 5s
+
+networks:
+  spring-product-networks:
+volumes:
+  db_data:

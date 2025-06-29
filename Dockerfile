@@ -1,20 +1,23 @@
-# ---- Stage 1: Build ----
-FROM eclipse-temurin:17-jdk-alpine AS build
-WORKDIR /app
-COPY . .
-RUN ./mvnw clean package -DskipTests
+# ----------- Stage 1: Build ----------------
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 
-# ---- Stage 2: Run ----
+WORKDIR /app
+
+COPY . /app
+
+# Create a directory for the JAR file
+RUN mvn clean install -DskipTests=true
+
+# ----------- Stage 2: Runtime --------------
 FROM eclipse-temurin:17-jre-alpine
+
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
 
-# Environment variables (use Docker secrets or .env in production)
-ENV JAVA_OPTS=""
+# Copy the built JAR file from the build stage
+# Adjust the path if your JAR file is located elsewhere
+COPY --from=build /app/target/spring-boot-crud-example-2-0.0.1-SNAPSHOT.jar /app/target/productApp.jar
 
-# Healthcheck for /health endpoint
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:9191/health || exit 1
+# Expose the port the app runs on
+EXPOSE 8080
 
-EXPOSE 9191
-CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+CMD ["java", "-jar", "/app/target/productApp.jar"]
